@@ -1,0 +1,36 @@
+# Node.js / NPM
+/node_modules
+/npm-debug.log
+/yarn-error.log
+
+# Docker
+/.env
+
+# IDE/Editor
+.vscode
+.idea
+*.sublime-*
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.sln.docstates
+
+# Editor directories and files
+/.idea/
+/.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Yarn v2
+.yarn/*
+!.yarn/cache
+!.yarn/unplugged
+!.yarn/build-state.yml
+.yarnrc.yml
+
+# Prettier
+/prettier.config.js
+/.prettierrc
+/.prettierignore
