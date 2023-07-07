@@ -202,3 +202,30 @@ dotenv -e .env npx sequelize db:seed:all
 env $(cat .env) npx sequelize db:seed:undo:all
 dotenv -e .env npx sequelize db:seed:undo:all
 ```
+
+### Instalar Express
+```bash
+npm install -E express@4.17
+```
+
+### Instalar Nodemon
+```bash
+npm install -D -E nodemon@2.0.15
+```
+
+### Adicione essa configuração no arquivo `package.json`
+```bash
+//  {
+//  ...
+  "main": "src/server.js",
+//  ...
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+//  ...
+//  }
+```
+
+### Rodar o servidor
+dotenv -e .env npm run dev
