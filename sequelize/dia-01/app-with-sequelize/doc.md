@@ -159,3 +159,46 @@ dotenv -e .env npx sequelize db:migrate
 ```bash
 dotenv -e .env npx sequelize db:migrate:undo
 ```
+
+### Criando uma Seed
+```bash
+npx sequelize seed:generate --name users
+```
+
+### Configurando a Seed
+```bash
+'use strict';
+
+module.exports = {
+  up: async (queryInterface, Sequelize) => queryInterface.bulkInsert('Users',
+    [
+      {
+        fullName: 'Leonardo',
+        email: 'leo@test.com',
+        // usamos a função CURRENT_TIMESTAMP do SQL para salvar a data e hora atual nos campos `createdAt` e `updatedAt`
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      {
+        fullName: 'JEduardo',
+        email: 'edu@test.com',
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+    ], {}),
+
+  down: async (queryInterface) => queryInterface.bulkDelete('Users', null, {}),
+};
+```
+
+### Executar a Seed
+```bash
+env $(cat .env) npx sequelize db:seed:all
+dotenv -e .env npx sequelize db:seed:all
+```
+
+### Reverter a Seed
+```bash
+env $(cat .env) npx sequelize db:seed:undo:all
+dotenv -e .env npx sequelize db:seed:undo:all
+```
