@@ -68,9 +68,17 @@ module.exports = {
 docker container run --name container-mysql -e MYSQL_ROOT_PASSWORD=password -d -p 3306:3306 mysql:8.0.29
 ```
 
-### Criar o banco de dados no container MySQL
+### Criar o `banco de dados` no container MySQL `linux`
 ```bash
 env $(cat .env) npx sequelize db:create
+```
+
+### Criar o `banco de dados` no container MySQL `Windows`
+```bash
+npm install -g dotenv-cli
+```
+```bash
+dotenv -e .env npx sequelize db:create
 ```
 
 ### Acessar o container pelo terminal
@@ -144,10 +152,10 @@ module.exports = {
 
 ### Executando a migration
 ```bash
-env $(cat .env) npx sequelize db:migrate
+dotenv -e .env npx sequelize db:migrate
 ```
 
 ### Caso precise reverter a migration executada
 ```bash
-env $(cat .env) npx sequelize db:migrate:undo
+dotenv -e .env npx sequelize db:migrate:undo
 ```
