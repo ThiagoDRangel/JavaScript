@@ -87,3 +87,67 @@ mysql -u root -p
 ```bash
 show databases;
 ```
+
+### Criando arquivo `user.model.js`
+```bash
+const sara = await User.create({
+  fullName: 'Sara Silva Santos',
+  email: 'sara.ss@trybe.com',
+});
+
+console.log(sara instanceof User); // true
+console.log(sara.name); // "Sara Silva Santos"
+
+module.exports = UserModel;
+```
+
+### Gerar uma migration `create-user`
+```bash
+npx sequelize migration:generate --name create-user
+```
+
+### configurando a migration
+```bash
+'use strict';
+
+module.exports = {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('Users', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      fullName: {
+        type: Sequelize.STRING
+      },
+      email: {
+        type: Sequelize.STRING
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
+    });
+   },
+
+   down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('Users');
+   }
+ };
+```
+
+### Executando a migration
+```bash
+env $(cat .env) npx sequelize db:migrate
+```
+
+### Caso precise reverter a migration executada
+```bash
+env $(cat .env) npx sequelize db:migrate:undo
+```
