@@ -32,6 +32,22 @@ services:
     volumes:
       - ./db_data:/var/lib/mysql
 ```
+
+### Criando arquivo `Dockerfile`
+```bash
+FROM node:14
+
+WORKDIR /app
+
+COPY package*.json .
+
+RUN npm install
+
+COPY . .
+
+ENTRYPOINT [ "npm", "run" ]
+CMD ["start"]
+```
 ### Iniciando um projeto Node
 ```bash
 npm init -y
