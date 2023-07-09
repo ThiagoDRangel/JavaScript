@@ -2,9 +2,10 @@
   "name": "cursos",
   "version": "1.0.0",
   "description": "```bash\r npm init -y\r ```",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./src/server.js",
+    "dev": "nodemon ./src/server.js"
   },
   "keywords": [],
   "author": "",
