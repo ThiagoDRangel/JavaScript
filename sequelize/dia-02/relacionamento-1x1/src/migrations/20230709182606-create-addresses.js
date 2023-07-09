@@ -1,5 +1,3 @@
-// src/migrations/[timestamp]-create-addresses.js
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     return queryInterface.createTable('addresses', {

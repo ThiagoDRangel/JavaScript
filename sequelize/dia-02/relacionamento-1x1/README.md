@@ -111,3 +111,156 @@ npx sequelize db:create
 ```bash
 npx sequelize db:migrate
 ```
+
+### Crie o arquivo `src/models/employee.model.js` para relacionar as tabelas
+
+### Configure o arquivo `employee.model.js`
+```bash
+module.exports = (sequelize, DataTypes) => {
+  const Employee = sequelize.define('Employee', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    firstName: DataTypes.STRING,
+    lastName: DataTypes.STRING,
+    age: DataTypes.INTEGER,
+  },
+  {
+    timestamps: false, // remove a obrigatoriedade de utilizar os campos `createdAt` e `updatedAt`
+    tableName: 'employees',
+    underscored: true,
+  });
+
+  Employee.associate = (models) => {
+    Employee.hasOne(models.Address,
+      { foreignKey: 'employeeId', as: 'addresses' });
+  };
+
+  return Employee;
+};
+```
+### Crie o arquivo `src/models/address.model.js` para relacionar as tabelas
+
+### Configure o arquivo `address.model.js`
+```bash
+module.exports = (sequelize, DataTypes) => {
+  const Address = sequelize.define('Address', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    city: DataTypes.STRING,
+    street: DataTypes.STRING,
+    number: DataTypes.INTEGER,
+    employeeId: { type: DataTypes.INTEGER, foreignKey: true },
+    // A declaração da Foreign Key é opcional no model
+  },
+  {
+    timestamps: false,
+    tableName: 'addresses',
+    underscored: true,
+  });
+
+  Address.associate = (models) => {
+// define o tipo de relacionamento
+    Address.belongsTo(models.Employee,
+    // define qual a foreign key a ser criada
+      { foreignKey: 'employeeId', as: 'employees' });
+  };
+
+  return Address;
+};
+```
+
+### Métodos de associação do sequelize
+```
+hasOne
+belongsTo
+hasMany
+belongsToMany
+```
+### Criar o Seed da tabela `Employees`
+```bash
+npx sequelize seed:generate --name employees
+```
+### Configure a `seeders 'Employees'`
+```bash
+module.exports = {
+  up: async (queryInterface, _Sequelize) => {
+    return queryInterface.bulkInsert('employees',
+      [
+        {
+          first_name: 'Marcos',
+          last_name: 'Zuck',
+          age: 49,
+        },
+        {
+          first_name: 'Fred',
+          last_name: 'Mercúrio',
+          age: 19,
+        },
+        {
+          first_name: 'Ayrton',
+          last_name: 'Keno',
+          age: 51,
+        },
+        {
+          first_name: 'Robin',
+          last_name: 'Mathias',
+          age: 63,
+        },
+      ],
+      {},
+    );
+  },
+
+  down: async (queryInterface, _Sequelize) => {
+    return queryInterface.bulkDelete('employees', null, {});
+  },
+};
+```
+### Criar o Seed da tabela `Address`
+```bash
+npx sequelize seed:generate --name addresses
+```
+### Configure a ``Seeders 'Address'`
+```bash
+module.exports = {
+  up: async (queryInterface, _Sequelize) => {
+    return queryInterface.bulkInsert('addresses',
+      [
+        {
+          city: 'Belo Horizonte',
+          street: 'Rua Flórida',
+          number: 1080,
+          employee_id: 1,
+        },
+        {
+          city: 'São Paulo',
+          street: 'Avenida Paulista',
+          number: 1980,
+          employee_id: 2,
+        },
+        {
+          city: 'Fortaleza',
+          street: 'Rua das Enseadas',
+          number: 95,
+          employee_id: 3,
+        },
+        {
+          city: 'Belo Horizonte',
+          street: 'Rua Andaluzita',
+          number: 131,
+          employee_id: 4,
+        },
+        {
+          city: 'Curitiba',
+          street: 'Rua Fria',
+          number: 101,
+          employee_id: 4,
+        },
+      ],
+      {},
+    );
+  },
+
+  down: async (queryInterface, _Sequelize) => {
+    return queryInterface.bulkDelete('addresses', null, {});
+  },
+};
+```
