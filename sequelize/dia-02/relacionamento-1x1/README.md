@@ -107,3 +107,7 @@ docker compose up -d --build
 ```bash
 npx sequelize db:create
 ```
+### Criando tabelas no banco de dados
+```bash
+npx sequelize db:migrate
+```
