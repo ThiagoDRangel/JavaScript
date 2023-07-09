@@ -264,3 +264,82 @@ module.exports = {
   },
 };
 ```
+### Executar todas as `Seeds` pendentes
+```bash
+npx sequelize db:seed:all
+```
+
+## Configurando o servidor `rodando no nodemon`
+
+### Crie o arquivo `src/services/employee.service.js`
+```bash
+const { Address, Employee } = require('../models/');
+
+const getAll = async () => {
+  const users = await Employee.findAll({
+    include: { model: Address, as: 'addresses' },
+  });
+
+  return users;
+};
+
+module.exports = { getAll };
+```
+
+### Crie o arquivo `src/controllers/employee.controller.js`
+```bash
+const EmployeeService = require('../services/employee.service');
+
+const getAll = async (_req, res) => {
+  try {
+    const employees = await EmployeeService.getAll();
+    return res.status(200).json(employees);
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).json({ message: 'Ocorreu um erro' });
+  }
+};
+
+module.exports = {
+  getAll,
+};
+```
+
+### Crie o arquivo `src/app.js`
+```bash
+const express = require('express');
+
+const employee = require('./controllers/employee.controller');
+
+const app = express();
+
+app.use(express.json());
+
+app.get('/employees', employee.getAll);
+
+module.exports = app;
+```
+
+### Crie o arquivo `src/server.js`
+```bash
+const app = require('./app');
+
+const PORT = process.env.PORT || 3003;
+
+app.listen(PORT, () => {
+  console.log(`Escutando na porta ${PORT}`);
+});
+```
+
+### Configure o arquivo `package.json`
+```bash
+ "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js"
+```
+### Inicie o servidor
+```bash
+npm run dev
+```
+
+### Faça uma requisição `GET` no endpoint `http://localhost:3003/employees`
