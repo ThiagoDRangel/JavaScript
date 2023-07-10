@@ -343,3 +343,50 @@ npm run dev
 ```
 
 ### Faça uma requisição `GET` no endpoint `http://localhost:3003/employees`
+
+### Apagando o banco de dados antigo
+```bash
+npx sequelize db:migrate:undo:all
+```
+### Subindo as migrações novamente
+```bash
+npx sequelize db:migrate
+```
+### Populando o banco de dados com as novas informações
+```bash
+npx sequelize db:seed:all
+```
+### Adicionar uma nova rota no arquivo `app.js`
+```bash
+app.get('/employees/:id', employee.getById);
+```
+### Adicionar o método `getById` no `src/controllers/employee.controller.js`
+```bash
+const getById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const employee = await EmployeeService.getById(id);
+
+    if (!employee) {
+      return res.status(404).json({ message: 'Pessoa colaboradora não encontrada' });
+    }
+
+    return res.status(200).json(employee);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: 'Ocorreu um erro' });
+  };
+}
+```
+
+### Adicionar o método `getById` no `src/services/employee.service.js`
+```bash
+const getById = async (id) => {
+  const employee = await Employee.findOne({
+      where: { id },
+      include: [{ model: Address, as: 'addresses' }],
+    });
+  return employee;
+}
+```
+### Faça um requisição `GET` no endpoint `http://localhost:3003/employees/1`
