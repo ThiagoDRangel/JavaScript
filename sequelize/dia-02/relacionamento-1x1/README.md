@@ -343,3 +343,48 @@ npm run dev
 ```
 
 ### Faça uma requisição `GET` no endpoint `http://localhost:3003/employees`
+
+## Configurando `Lazy Loading`
+
+### Adicione o método `getById` em `src/services/employee.service.js`
+```bash
+const getById = async (id) => {
+  const employee = await Employee.findOne({
+    where: { id },
+  });
+  return employee;
+}
+```
+### Crie o arquivo `src/services/address.service.js`
+```bash
+const { Address } = require('../models/');
+
+const getAllByEmployeeId = async (employeeId) => {
+  const addresses = await Address.findAll({ where: { employeeId } });
+
+  return addresses;
+};
+
+module.exports = {
+  getAllByEmployeeId,
+}
+```
+
+### O arquivo criado será importado na `src/controllers/employee.controller.js`
+```bash
+const AddressService = require('../services/address.service');
+
+const getById = async (req, res) => {
+/*   try {
+     const { id } = req.params;
+     const employee = await EmployeeService.getById(id);
+
+    if (!employee) {
+       return res.status(404).json({ message: 'Pessoa colaboradora não encontrada' });
+     } */
+
+    if (req.query.includeAddresses === 'true') {
+      const addresses = await AddressService.getAllByEmployeeId(id);
+      return res.status(200).json({ employee, addresses });
+    }
+```
