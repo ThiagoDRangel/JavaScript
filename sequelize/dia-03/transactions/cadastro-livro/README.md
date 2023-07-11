@@ -283,3 +283,58 @@ module.exports = {
   },
 };
 ```
+
+### Drop o banco de dados
+```bash
+dotenv -e .env npx sequelize db:drop
+```
+### Crie o banco de dados
+```bash
+dotenv -e .env npx sequelize db:create
+```
+### Crie as tabelas usando as migrations
+```bash
+dotenv -e .env npx sequelize db:migrate
+```
+### Popule as tabelas usando os seeds
+```bash
+dotenv -e .env npx sequelize db:seed:all
+```
+
+### Camada do serviço `src/services/userBook.service.js`
+```bash
+const { User, Book } = require('../models');
+
+const getUsersBooksById = (id) => User.findOne({
+  where: { id },
+  include: [{ model: Book, as: 'books', through: { attributes: [] } }],
+});
+
+module.exports = {
+  getUsersBooksById,
+};
+```
+
+### Camada de contrle `src/controllers/userBook.controller.js`
+```bash
+const userBookService = require('../services/userBook.service');
+
+const getUsersBooksById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await userBookService.getUsersBooksById(id);
+
+    if (!user)
+      return res.status(404).json({ message: 'Pessoa não encontrada' });
+
+    return res.status(200).json(user);
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).json({ message: 'Algo deu errado' });
+  }
+};
+
+module.exports = {
+  getUsersBooksById,
+};
+```
